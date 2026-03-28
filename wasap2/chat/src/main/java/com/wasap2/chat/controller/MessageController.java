@@ -3,6 +3,7 @@ package com.wasap2.chat.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/messages")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class MessageController {
 
     private final MessageService messageService;
@@ -38,5 +40,11 @@ public class MessageController {
     public ResponseEntity<User> createUser(@RequestParam String name) {
         User user = messageService.createUser(name);
         return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = messageService.getAllUsers();
+        return ResponseEntity.ok(users);
     }
 }

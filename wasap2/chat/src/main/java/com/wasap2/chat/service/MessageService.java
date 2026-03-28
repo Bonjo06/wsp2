@@ -44,4 +44,8 @@ public class MessageService {
         user.setName(name);
         return userRepository.save(user);
     }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 }

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WASAP2 </title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>WASAP2 </h1>
+        </header>
+
+        <div class="main-content">
+            <!-- contactos -->
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <h2>Contactos</h2>
+                    <button id="createUserBtn" class="btn-create"> Nuevo Usuario</button>
+                </div>
+                <div id="usersList" class="users-list">
+                </div>
+            </aside>
+
+            <main class="chat-area">
+                <div class="tabs-container">
+                    
+                    <div id="chat" class="tab-content active">
+                        <div class="chat-header">
+                            <h2 id="chatTitle">Selecciona un contacto</h2>
+                        </div>
+                        <div id="messagesContainer" class="messages-container">
+                            <p class="info-text">Selecciona un usuario para empezar a chatear</p>
+                        </div>
+                        <div class="input-area">
+                            <input type="text" id="messageInput" placeholder="Escribe un mensaje..." disabled>
+                            <button id="sendBtn" class="btn-send" disabled>Enviar</button>
+                        </div>
+                    </div>
+                    
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- modal crear usuario -->
+    <div id="createUserModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Crear Nuevo Usuario</h3>
+            <input type="text" id="newUserName" placeholder="Nombre del usuario">
+            <div class="modal-buttons">
+                <button id="cancelCreateBtn" class="btn-cancel">Cancelar</button>
+                <button id="confirmCreateBtn" class="btn-confirm">Crear</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal seleccionar chat -->
+    <div id="selectSenderModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Selecciona tu usuario</h3>
+            <div id="senderslist" class="users-modal-list">
+            </div>
+            <button id="closeModal" class="btn-cancel">Cerrar</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
