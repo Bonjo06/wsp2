@@ -1,0 +1,7 @@
+com\wasap2\chat\model\Message.class
+com\wasap2\chat\service\MessageService.class
+com\wasap2\chat\repository\MessageRepository.class
+com\wasap2\chat\model\User.class
+com\wasap2\chat\repository\UserRepository.class
+com\wasap2\chat\controller\MessageController.class
+com\wasap2\chat\ChatApplication.class
