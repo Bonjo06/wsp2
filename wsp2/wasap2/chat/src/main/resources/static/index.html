@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Clone</title>
+    <style>
+        /* ========================================= */
+        /* TEMAS (Paletas de Colores)                 */
+        /* ========================================= */
+
+        /* MODO CLARO (Verde por defecto) */
+        body.light-mode {
+            --bg-body: #d1d7db;
+            --bg-app: #ffffff;
+            --bg-sidebar: #ffffff;
+            --bg-chat: #efeae2;
+            --bg-header: #f0f2f5;
+            --msg-in: #ffffff;
+            --msg-out: #d9fdd3;
+            --primary: #00a884;
+            --text-main: #111b21;
+            --text-muted: #667781;
+            --border: #e9edef;
+            --icon-color: #54656f;
+        }
+
+        /* MODO OSCURO (Tonos Morados) */
+        body.dark-mode {
+            --bg-body: #110e16;
+            --bg-app: #1c1824;
+            --bg-sidebar: #1c1824;
+            --bg-chat: #0a080f;
+            --bg-header: #262131;
+            --msg-in: #262131;
+            --msg-out: #6a34ac; /* Morado intenso para mensajes enviados */
+            --primary: #9d66cc; /* Morado claro para acentos */
+            --text-main: #f0f2f5;
+            --text-muted: #a0a0a0;
+            --border: #383049;
+            --icon-color: #a0a0a0;
+        }
+
+        /* ========================================= */
+        /* ESTILOS BASE (Usando las variables)        */
+        /* ========================================= */
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            transition: background-color 0.3s ease; /* Animación suave al cambiar tema */
+        }
+
+        /* Pantalla de Inicio de Sesión */
+        #login-screen {
+            background: var(--bg-app);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 17px 50px 0 rgba(0,0,0,.19);
+            text-align: center;
+            width: 300px;
+        }
+        #login-screen input, #login-screen button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            box-sizing: border-box;
+            background-color: var(--bg-app);
+            color: var(--text-main);
+        }
+        #login-screen button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Contenedor principal de la App */
+        #app-container {
+            display: none;
+            width: 100%;
+            max-width: 1200px;
+            height: 95vh;
+            background: var(--bg-app);
+            box-shadow: 0 17px 50px 0 rgba(0,0,0,.19);
+            flex-direction: row;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Barra Lateral (Contactos) */
+        .sidebar {
+            width: 30%;
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-sidebar);
+        }
+        .header {
+            background-color: var(--bg-header);
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            font-weight: 500;
+        }
+        .contact-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        .contact-item {
+            display: flex;
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            align-items: center;
+        }
+        .contact-item:hover, .contact-item.active { background-color: var(--bg-header); }
+        .avatar {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            margin-right: 15px;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 20px; color: white;
+            font-weight: bold;
+        }
+
+        /* Área de Chat */
+        .chat-area {
+            width: 70%;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-chat);
+        }
+        .messages-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .message {
+            max-width: 65%;
+            padding: 8px 12px;
+            margin-bottom: 10px;
+            border-radius: 7.5px;
+            font-size: 14.2px;
+            line-height: 19px;
+            box-shadow: 0 1px 0.5px rgba(0,0,0,.13);
+            position: relative;
+            color: #111b21; /* Texto negro siempre en burbujas para legibilidad */
+        }
+        .message.in { background-color: var(--msg-in); align-self: flex-start; border-top-left-radius: 0; }
+        .message.out { background-color: var(--msg-out); align-self: flex-end; border-top-right-radius: 0; }
+        
+        /* Ajuste de color de texto para mensajes enviados en modo oscuro (morado fuerte) */
+        body.dark-mode .message.out { color: white; }
+        
+        .message-time { font-size: 11px; color: #667781; float: right; margin: 10px 0 -5px 15px; }
+        body.dark-mode .message.out .message-time { color: rgba(255,255,255,0.6); }
+
+        /* Controles de envío */
+        .input-area {
+            background-color: var(--bg-header);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .input-area input {
+            flex: 1;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            background-color: var(--bg-app);
+            color: var(--text-main);
+        }
+        .input-area button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--icon-color);
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .input-area button:hover { color: var(--primary); }
+        
+        /* Botones de acción (Tema y Agregar) */
+        .action-btns { display: flex; gap: 10px; align-items: center; }
+        .btn-icon { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--icon-color); padding: 5px; border-radius: 50%; }
+        .btn-icon:hover { background-color: rgba(0,0,0,0.05); }
+        body.dark-mode .btn-icon:hover { background-color: rgba(255,255,255,0.05); }
+
+    </style>
+</head>
+<body class="light-mode">
+
+    <div id="login-screen">
+        <h2>Entrar a WhatsApp</h2>
+        <p style="color: var(--text-muted); font-size: 14px;">Ingresa tu nombre para comenzar</p>
+        <input type="text" id="myNameInput" placeholder="Tu Nombre (Ej: Benjamin)">
+        <button onclick="login()">Iniciar Sesión</button>
+    </div>
+
+    <div id="app-container">
+        
+        <div class="sidebar">
+            <div class="header">
+                <div style="display: flex; align-items: center;">
+                    <div class="avatar">👤</div>
+                    <span id="myProfileName">Mi Perfil</span>
+                </div>
+                <div class="action-btns">
+                    <button class="btn-icon" id="theme-toggle" title="Cambiar Modo" onclick="toggleTheme()">🌓</button>
+                    <button class="btn-icon" title="Nuevo Chat" onclick="addNewContact()">+</button>
+                </div>
+            </div>
+            <div class="contact-list" id="contactList"></div>
+        </div>
+
+        <div class="chat-area">
+            <div class="header" id="chatHeader">
+                <div style="display: flex; align-items: center; display: none;" id="activeContactInfo">
+                    <div class="avatar" id="activeAvatar">U</div>
+                    <span id="activeContactName">Selecciona un chat</span>
+                </div>
+                <span id="noChatSelected" style="color: var(--text-muted);">Haz clic en un contacto para iniciar</span>
+            </div>
+            
+            <div class="messages-container" id="messagesContainer"></div>
+
+            <div class="input-area" id="inputArea" style="visibility: hidden;">
+                <input type="text" id="messageInput" placeholder="Escribe un mensaje" onkeypress="handleKeyPress(event)">
+                <button onclick="sendMessage()">➤ ENVIAR</button>
+            </div>
+        </div>
+
+    </div>
+
+<script>
+    // =========================================
+    // LÓGICA DE TEMAS (Modo Claro/Oscuro)
+    // =========================================
+    
+    // Al cargar la página, aplicar el tema guardado o el claro por defecto
+    const currentTheme = localStorage.getItem('theme') || 'light-mode';
+    document.body.className = currentTheme;
+
+    function toggleTheme() {
+        const body = document.body;
+        let newTheme = 'light-mode';
+        
+        if (body.classList.contains('light-mode')) {
+            newTheme = 'dark-mode';
+        } else {
+            newTheme = 'light-mode';
+        }
+        
+        body.className = newTheme; // Aplicar el cambio visual
+        localStorage.setItem('theme', newTheme); // Guardar preferencia en el navegador
+    }
+
+    // =========================================
+    // LÓGICA DE MENSAJERÍA (Existente)
+    // =========================================
+    let myId = null;
+    let currentChatId = null;
+    let contacts = []; 
+    let chatInterval = null;
+
+    async function login() {
+        const name = document.getElementById('myNameInput').value.trim();
+        if (!name) return alert("Por favor ingresa tu nombre");
+        
+        try {
+            const response = await fetch(`/api/messages/users`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ name: name })
+            });
+            const user = await response.json();
+            
+            myId = user.id;
+            
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app-container').style.display = 'flex';
+            document.getElementById('myProfileName').innerText = `${user.name}`;
+
+            const savedContacts = localStorage.getItem(`contacts_${myId}`);
+            if(savedContacts) {
+                contacts = JSON.parse(savedContacts);
+                renderContacts();
+            }
+        } catch (error) {
+            alert("No se pudo conectar con el servidor Java. ¿Está encendido?");
+        }
+    }
+
+    async function addNewContact() {
+        const friendName = prompt("¿Cómo se llama tu amigo?");
+        if (!friendName) return;
+
+        try {
+            const response = await fetch(`/api/messages/users`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ name: friendName })
+            });
+            const friend = await response.json();
+
+            if(!contacts.find(c => c.id == friend.id)) {
+                contacts.push({ id: friend.id, name: friend.name });
+                localStorage.setItem(`contacts_${myId}`, JSON.stringify(contacts));
+                renderContacts();
+            }
+        } catch (error) {
+            alert("Hubo un error al agregar el contacto.");
+        }
+    }
+
+    function renderContacts() {
+        const list = document.getElementById('contactList');
+        list.innerHTML = '';
+        contacts.forEach(contact => {
+            const div = document.createElement('div');
+            div.className = `contact-item ${currentChatId == contact.id ? 'active' : ''}`;
+            div.onclick = () => openChat(contact.id, contact.name);
+            div.innerHTML = `
+                <div class="avatar">
+                    ${contact.name.charAt(0).toUpperCase()}
+                </div>
+                <div style="flex: 1;">
+                    <div style="font-weight: 500;">${contact.name}</div>
+                </div>
+            `;
+            list.appendChild(div);
+        });
+    }
+
+    function openChat(friendId, friendName) {
+        currentChatId = friendId;
+        renderContacts(); 
+        
+        document.getElementById('noChatSelected').style.display = 'none';
+        document.getElementById('activeContactInfo').style.display = 'flex';
+        document.getElementById('activeContactName').innerText = friendName;
+        document.getElementById('activeAvatar').innerText = friendName.charAt(0).toUpperCase();
+        document.getElementById('inputArea').style.visibility = 'visible';
+        
+        loadMessages();
+
+        if(chatInterval) clearInterval(chatInterval);
+        chatInterval = setInterval(loadMessages, 2000);
+    }
+
+    async function loadMessages() {
+        if (!currentChatId) return;
+
+        try {
+            const response = await fetch(`/api/messages/conversation?user1Id=${myId}&user2Id=${currentChatId}`);
+            if(!response.ok) return;
+            const messages = await response.json();
+            
+            const container = document.getElementById('messagesContainer');
+            
+            if(container.childElementCount !== messages.length) {
+                container.innerHTML = ''; 
+                messages.forEach(msg => {
+                    const div = document.createElement('div');
+                    const isIn = msg.sender.id != myId; 
+                    
+                    let date;
+                    if (Array.isArray(msg.timestamp)) {
+                        date = new Date(msg.timestamp[0], msg.timestamp[1] - 1, msg.timestamp[2], msg.timestamp[3], msg.timestamp[4]);
+                    } else {
+                        date = new Date(msg.timestamp);
+                    }
+
+                    const timeString = date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
+
+                    div.className = `message ${isIn ? 'in' : 'out'}`;
+                    div.innerHTML = `${msg.content} <span class="message-time">${timeString}</span>`;
+                    container.appendChild(div);
+                });
+                container.scrollTop = container.scrollHeight;
+            }
+        } catch (error) {
+            console.error("Error cargando mensajes", error);
+        }
+    }
+
+    async function sendMessage() {
+        const input = document.getElementById('messageInput');
+        const content = input.value.trim();
+        
+        if (!content || !currentChatId) return;
+        input.value = ''; 
+        
+        await fetch(`/api/messages/send`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ senderId: myId, receiverId: currentChatId, content: content })
+        });
+
+        loadMessages(); 
+    }
+
+    function handleKeyPress(e) {
+        if (e.key === 'Enter') sendMessage();
+    }
+</script>
+
+</body>
+</html>
