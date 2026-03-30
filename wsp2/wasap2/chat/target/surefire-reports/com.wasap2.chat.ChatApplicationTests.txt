@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.wasap2.chat.ChatApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.34 s -- in com.wasap2.chat.ChatApplicationTests
