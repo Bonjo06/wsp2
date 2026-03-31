@@ -104,25 +104,25 @@ docker images
 
 ### 5.1 Endpoints
 
-Endpoint 1:
+Endpoint Creacion usuario:
 
 ![Endpoint Creacion usuario](img/usuarioTest.jpeg)
 
-Endpoint 2:
+Endpoint Manejo de Error:
 
 ![Endpoint Manejo de Error](img/errorTest.jpeg)
 
-Endpoint 3:
+Endpoint Mensaje:
 
 ![Endpoint Mensaje](img/chatTest.jpeg)
 
 ### 5.2 Base de datos H2
 
-H2 captura 1:
+H2 Usuarios:
 
 ![H2 Usuarios](img/usersH2.jpeg)
 
-H2 captura 2:
+H2 Mensajes:
 
 ![H2 Mensajes](img/MensajesH2.jpeg)
 
