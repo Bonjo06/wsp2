@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.wasap2.chat.exception.ResourceNotFoundException;
 import com.wasap2.chat.model.Message;
 import com.wasap2.chat.model.User;
 import com.wasap2.chat.repository.MessageRepository;
