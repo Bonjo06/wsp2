@@ -106,24 +106,24 @@ docker images
 
 Endpoint Creacion usuario:
 
-![Endpoint Creacion usuario](img/usuarioTest.jpeg)
+![Endpoint Creacion usuario](wsp2/img/usuarioTest.jpeg)
 
 Endpoint Manejo de Error:
 
-![Endpoint Manejo de Error](img/errorTest.jpeg)
+![Endpoint Manejo de Error](wsp2/img/errorTest.jpeg)
 
 Endpoint Mensaje:
 
-![Endpoint Mensaje](img/chatTest.jpeg)
+![Endpoint Mensaje](wsp2/img/chatTest.jpeg)
 
 ### 5.2 Base de datos H2
 
 H2 Usuarios:
 
-![H2 Usuarios](img/usersH2.jpeg)
+![H2 Usuarios](/wsp2/img/usersH2.jpeg)
 
 H2 Mensajes:
 
-![H2 Mensajes](img/MensajesH2.jpeg)
+![H2 Mensajes](wsp2/img/MensajesH2.jpeg)
 
 ---
